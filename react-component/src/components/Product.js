@@ -5,22 +5,33 @@ import { useEffect, useState } from 'react';
 export default function Product() {
     const [products, setProducts] = useState([]); 
     const [categories, setCategories] = useState([]);
+    const [catId, setCatId] = useState(0);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         fetch("http://localhost:9999/products")
             .then(res => res.json())
-            .then(result => setProducts(result));
+            .then(result => {
+                let searResult = [];
+                if(catId==0){
+                    searResult = result.filter(p=>p.name.toLowerCase().includes(search.toLowerCase()));
+                    setProducts(searResult);
+                }else{
+                    searResult = result.filter(p=>p.catId===catId && p.name.toLowerCase().includes(search.toLowerCase()));
+                    setProducts(searResult);
+                }
+            });
 
         fetch("http://localhost:9999/categories")
             .then(res => res.json())
             .then(result => setCategories(result));
-    }, []);
+    }, [catId, search]);
 
     return (
         <Container fluid>
             <Row>
                 <Col xs={3}>
-                    <Form.Select>
+                    <Form.Select onChange={(e)=>setCatId(parseInt(e.target.value))}>
                         <option key={0} value={0}>Select all</option>
                         {
                             categories?.map(c => (
@@ -35,6 +46,7 @@ export default function Product() {
                             <Form.Control type="text"
                                 placeholder="Enter product name to search ..."
                                 style={{ border: "1px solid gray" }}
+                                onChange={e=>setSearch(e.target.value)}
                             />
                         </Form.Group>
                     </Form>
