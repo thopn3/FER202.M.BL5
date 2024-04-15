@@ -1,19 +1,21 @@
 import { Table, Container, Row, Col, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-// Sử dụng cú pháp function -> Tạo 1 component đặt tên là Product
-export default function Product({ data = [], categories = [] }) {
-    // Tạo ra các biến trạng thái (state) để quản lý dữ liệu cho component
-    const [products, setProducts] = useState(data); // products = data; change values of 'products' -> setProducts()
-    const [searchResult, setSearchResult] = useState(data);
+export default function Product() {
+    const [products, setProducts] = useState([]); 
+    const [categories, setCategories] = useState([]);
 
-    const handleSearch = (search) => {
-        // Tìm kiếm các product trong mảng 'products'
-        const result = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
-        // Thay đổi trạng thái dữ liệu của 'searchResult' thông qua hàm setSearchResult
-        setSearchResult(result);
-    }
+    useEffect(() => {
+        fetch("http://localhost:9999/products")
+            .then(res => res.json())
+            .then(result => setProducts(result));
+
+        fetch("http://localhost:9999/categories")
+            .then(res => res.json())
+            .then(result => setCategories(result));
+    }, []);
+
     return (
         <Container fluid>
             <Row>
@@ -33,7 +35,6 @@ export default function Product({ data = [], categories = [] }) {
                             <Form.Control type="text"
                                 placeholder="Enter product name to search ..."
                                 style={{ border: "1px solid gray" }}
-                                onChange={(e) => handleSearch(e.target.value)}
                             />
                         </Form.Group>
                     </Form>
@@ -56,7 +57,7 @@ export default function Product({ data = [], categories = [] }) {
                         </thead>
                         <tbody>
                             {
-                                searchResult.map(p => (
+                                products.map(p => (
                                     <tr key={p.id}>
                                         <td>{p.id}</td>
                                         <td>{p.name}</td>
@@ -78,7 +79,7 @@ export default function Product({ data = [], categories = [] }) {
     );
 }
 
-function Category({ data }) {
+function Category({data}) {
     return (
         <ul>
             {

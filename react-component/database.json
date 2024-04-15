@@ -1,0 +1,45 @@
+{
+    "products":[
+        {
+            "id": "P001",
+            "name": "Tủ lạnh Panasonic",
+            "price": 15000000,
+            "quantity": 10,
+            "catId": 1,
+            "createAt": "2024/02/22",
+            "status": true
+        },
+        {
+            "id": "P002",
+            "name": "Tivi LG",
+            "price": 10000000,
+            "quantity": 20,
+            "catId": 1,
+            "createAt": "2023/12/20",
+            "status": false
+        },
+        {
+            "id": "P003",
+            "name": "Macbook Pro 2024 M2",
+            "price": 35000000,
+            "quantity": 15,
+            "catId": 2,
+            "createAt": "2024/01/10",
+            "status": true
+        }
+    ],
+    "categories":[
+        {
+            "id": 1,
+            "name": "Điện tử - Điện lạnh"
+        },
+        {
+            "id": 2,
+            "name": "Máy tính"
+        },
+        {
+            "id": 3,
+            "name": "Thiết bị mạng"
+        }
+    ]
+}
