@@ -1,5 +1,5 @@
 import { Table, Container, Row, Col, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 export default function Product() {
@@ -7,9 +7,10 @@ export default function Product() {
     const [categories, setCategories] = useState([]);
     const [catId, setCatId] = useState(0);
     const [search, setSearch] = useState("");
+    const {cat_id} = useParams();
 
     useEffect(() => {
-        fetch("http://localhost:9999/products")
+        fetch(cat_id ? `http://localhost:9999/products/?catId=${cat_id}` : "http://localhost:9999/products")
             .then(res => res.json())
             .then(result => {
                 let searResult = [];
@@ -25,7 +26,7 @@ export default function Product() {
         fetch("http://localhost:9999/categories")
             .then(res => res.json())
             .then(result => setCategories(result));
-    }, [catId, search]);
+    }, [catId, search, cat_id]);
 
     return (
         <Container fluid>
@@ -72,12 +73,16 @@ export default function Product() {
                                 products.map(p => (
                                     <tr key={p.id}>
                                         <td>{p.id}</td>
-                                        <td>{p.name}</td>
+                                        <td>
+                                            <Link to={`/product/${p.id}`}>
+                                                {p.name}
+                                            </Link>
+                                        </td>
                                         <td>{p.price}</td>
                                         <td>{p.quantity}</td>
                                         <td>
                                             {
-                                                categories && categories.find(c => c.id === p.catId).name
+                                                categories && categories.find(c => c.id === p.catId)?.name
                                             }
                                         </td>
                                     </tr>
@@ -95,8 +100,12 @@ function Category({data}) {
     return (
         <ul>
             {
-                data.map(c => (
-                    <li key={c.id}>{c.name}</li>
+                data?.map(c => (
+                    <li key={c.id}>
+                        <Link to={`/products/category/${c.id}`}>
+                            {c.name}
+                        </Link>
+                    </li>
                 ))
             }
         </ul>
